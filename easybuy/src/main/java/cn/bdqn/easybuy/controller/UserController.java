@@ -30,14 +30,16 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
-    public String login(User user, HttpSession httpSession, Model model) {
+    public String login(User user, HttpSession httpSession,String password, Model model) throws Exception {
+        user.setPassword(MD5.getMD5(password));
         User loginUser = userService.login(user);
         if (loginUser != null) {
             httpSession.setAttribute("loginUser", loginUser);
             return "index";
+        } else {
+            model.addAttribute("message", "用户名或密码错误！");
+            return "user/login";
         }
-        model.addAttribute("message", "用户名或密码错误！");
-        return "user/login";
     }
 
     @RequestMapping(value = "doregist", method = RequestMethod.POST)
