@@ -15,4 +15,18 @@
         SELECT * FROM easybuy_news order by createTime DESC
     </select>
 
+    <insert id="addNews" parameterType="News">
+        INSERT INTO `easybuy_news` VALUES(NULL,#{title},#{content},NOW())
+    </insert>
+
+    <update id="updateNews" parameterType="News">
+        UPDATE `easybuy_news` SET title=#{title},content=#{content} WHERE id=#{id}
+    </update>
+    
+    <delete id="deleteMoreNews" parameterType="integer">
+        DELETE FROM `easybuy_news` WHERE id IN
+        <foreach collection="list" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
 </mapper>

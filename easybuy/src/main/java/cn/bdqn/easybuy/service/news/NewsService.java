@@ -14,4 +14,10 @@ public interface NewsService {
     News queryNewsTitle(Integer id);
 
     PageInfo<News> queryAll(Integer pageNum, Integer pageSize);
+
+    Integer addNews(News news);
+
+    Integer updateNews(News news);
+
+    Integer deleteMoreNews(List<Integer> ids);
 }

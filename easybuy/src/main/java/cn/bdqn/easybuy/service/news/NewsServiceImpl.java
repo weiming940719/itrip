@@ -36,4 +36,19 @@ public class NewsServiceImpl implements NewsService {
         return pageInfo;
     }
 
+    @Override
+    public Integer addNews(News news) {
+        return newsMapper.addNews(news);
+    }
+
+    @Override
+    public Integer updateNews(News news) {
+        return newsMapper.updateNews(news);
+    }
+
+    @Override
+    public Integer deleteMoreNews(List<Integer> ids) {
+        return newsMapper.deleteMoreNews(ids);
+    }
+
 }

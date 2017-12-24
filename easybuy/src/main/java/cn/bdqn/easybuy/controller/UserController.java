@@ -47,8 +47,6 @@ public class UserController {
     @RequestMapping(value = "doregist", method = RequestMethod.POST)
     public String doregist(User user, Model model, String password,String checkcode,HttpServletRequest request,
                            HttpServletResponse response) {
-
-
         try {
             user.setPassword(MD5.getMD5(password));
         } catch (Exception e) {

@@ -14,4 +14,9 @@ public interface NewsMapper {
 
     List<News> queryAll();
 
+    Integer addNews(News news);
+
+    Integer updateNews(News news);
+
+    Integer deleteMoreNews(List<Integer> ids);
 }
