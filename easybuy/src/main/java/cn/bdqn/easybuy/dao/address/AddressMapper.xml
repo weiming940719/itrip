@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bdqn.easybuy.dao.address.AddressMapper">
+
+    <resultMap id="addressMap" type="UserAddress">
+        <id property="id" column="id"/>
+    </resultMap>
+
+
+    <select id="queryUserAddress" parameterType="integer" resultMap="addressMap">
+          SELECT * FROM `easybuy_user_address` WHERE userId=#{userId}
+    </select>
+
+    <insert id="addAddress" parameterType="UserAddress" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO `easybuy_user_address` VALUES(NULL,#{userId},#{address},NOW(),0,#{remark},#{nextMobile},#{nextName})
+    </insert>
+
+    <select id="queryAddressById" parameterType="integer" resultType="UserAddress">
+        SELECT * FROM `easybuy_user_address` WHERE id=#{id}
+    </select>
+</mapper>

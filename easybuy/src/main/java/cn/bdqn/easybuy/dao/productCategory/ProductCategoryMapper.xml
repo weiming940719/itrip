@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bdqn.easybuy.dao.productCategory.ProductCategoryMapper">
+    <resultMap id="categoryMap" type="ProductCategory">
+        <id property="id" column="id"/>
+        <collection property="product" ofType="Product" resultMap="productMap"/>
+    </resultMap>
+
+    <resultMap id="productMap" type="Product">
+        <id property="id" column="p_id"/>
+        <result property="name" column="p_name"/>
+    </resultMap>
+
+    <select id="queryCategoryFirst" resultMap="categoryMap">
+        select c.*,p.id as p_id,p.name as p_name,p.isDelete,p.price,p.fileName,p.description,p.stock from easybuy_product_category c,easybuy_product p where c.parentId=0 and c.id=p.categoryLevel1Id and p.isDelete=0 ORDER by c.id
+    </select>
+
+    <select id="queryCategorySecond" resultType="ProductCategory">
+       select c.* from (select id from easybuy_product_category) e,easybuy_product_category c where e.id=c.parentid and e.id=#{first}
+    </select>
+
+    <select id="queryCategoryThree" resultType="ProductCategory">
+        select c.* from (select id from easybuy_product_category) e,easybuy_product_category c where e.id=c.parentid and e.id=#{second}
+    </select>
+
+    <select id="queryAllCategory" resultType="ProductCategory">
+       select epc1.*,epc2.name as parentname from easybuy_product_category epc1 left join easybuy_product_category epc2 on epc1.parentid=epc2.id where 1=1
+    </select>
+
+
+    <select id="queryAllProductCategory" resultType="ProductCategory">
+        SELECT epc1.*,epc2.name
+
+        AS parentName FROM easybuy_product_category epc1 LEFT JOIN easybuy_product_category epc2 ON epc1.parentId=epc2.id
+
+        WHERE 1=1
+    </select>
+
+    <select id="queryCategoryFirsts" resultType="ProductCategory">
+        select * from easybuy_product_category where type=1
+    </select>
+
+    <delete id="deleteProductCategory" parameterType="integer">
+        delete from `easybuy_product_category` where id=#{id}
+    </delete>
+
+
+    <select id="isDeleteProductCategory" parameterType="integer" resultType="ProductCategory">
+        SELECT * FROM  `easybuy_product_category` WHERE parentId=#{id}
+    </select>
+
+    <!--添加一级分类-->
+    <insert id="saveFirstProductCategory" parameterType="String">
+        INSERT INTO easybuy_product_category(name, parentId, type,iconClass) VALUES (#{name},'0','1','')
+    </insert>
+    <!--添加二级分类-->
+    <insert id="saveSecondProductCategory" parameterType="ProductCategory">
+        INSERT INTO easybuy_product_category(name, parentId, type,iconClass) VALUES (#{name},#{parentId},'2','')
+    </insert>
+    <!--添加三级分类-->
+    <insert id="saveThirdProductCategory" parameterType="ProductCategory">
+        INSERT INTO easybuy_product_category(name, parentId, type,iconClass) VALUES (#{name},#{parentId},'3','')
+    </insert>
+    <select id="queryCategorySecondToAdd" resultType="ProductCategory">
+        SELECT * FROM easybuy_product_category WHERE type=2
+    </select>
+
+</mapper>

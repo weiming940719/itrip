@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bdqn.easybuy.dao.prodcut.ProductMapper">
+    <resultMap id="productMap" type="Product">
+        <id property="id" column="id"/>
+        <association property="productCategory" javaType="ProductCategory" resultMap="categoryMap"/>
+    </resultMap>
+    <resultMap id="categoryMap" type="ProductCategory">
+        <id property="id" column="c_id"/>
+        <result property="name" column="c_name"/>
+    </resultMap>
+
+    <select id="queryProductList" resultMap="productMap" parameterType="ProductCategory">
+        select p.*,c.type,c.name as c_name,c.id as c_id,c.parentId,c.iconClass from easybuy_product
+        p,easybuy_product_category c where c.type=#{type} and p.isDelete=0 and
+        c.name=#{name} and p.isDelete=0
+        <if test="type!=null and type==1">
+            and c.id=p.categoryLevel1Id
+        </if>
+        <if test="type!=null and type==2">
+            and c.id=p.categoryLevel2Id
+        </if>
+        <if test="type!=null and type==3">
+            and c.id=p.categoryLevel3Id
+        </if>
+    </select>
+
+    <select id="queryProductCount" resultType="integer" parameterType="ProductCategory">
+        select count(1) from easybuy_product p,easybuy_product_category c where c.type=#{type} and p.isDelete=0 and
+        c.name=#{name} and p.isDelete=0
+        <if test="type!=null and type==1">
+            and c.id=p.categoryLevel1Id
+        </if>
+        <if test="type!=null and type==2">
+            and c.id=p.categoryLevel2Id
+        </if>
+        <if test="type!=null and type==3">
+            and c.id=p.categoryLevel3Id
+        </if>
+    </select>
+
+    <select id="queryProductListInIndex" resultType="Product">
+        select * from easybuy_product group by categorylevel3id having max(categorylevel3id)
+    </select>
+
+    <select id="queryProductDetail" resultType="Product">
+        select * from easybuy_product where id=#{id} and isDelete=0
+    </select>
+
+    <update id="updateProduct">
+        update easybuy_product set stock=#{quantity} where id=#{id}
+    </update>
+
+    <select id="queryProductByName" resultMap="productMap">
+        select * from easybuy_product where isDelete=0 and name like concat('%',#{name},'%')
+    </select>
+
+    <select id="queryProductByNameCount" resultType="integer">
+        select count(1) from easybuy_product where isDelete=0 and name like concat('%',#{name},'%')
+    </select>
+
+    <select id="queryAllProduct" resultType="Product">
+        select * from easybuy_product where  isdelete=0 order by id desc
+    </select>
+
+    <insert id="addProduct" parameterType="Product">
+        insert  into easybuy_product values (null,#{name},#{description},#{price},#{stock},#{categoryLevel1Id},#{categoryLevel2Id},#{categoryLevel3Id},#{fileName},0)
+    </insert>
+
+    <!--假删除-->
+    <update id="deleteProduct" parameterType="integer">
+        update easybuy_product set isdelete=1 where id=#{id}
+    </update>
+
+    <update id="deleteProductByList">
+        update easybuy_product set isdelete=1 where id IN
+        <foreach collection="list" open="(" close=")" separator="," item="ids">
+            #{ids}
+        </foreach>
+    </update>
+
+    <update id="updateProductFile" parameterType="Product">
+        update easybuy_product set categoryLevel1Id = #{categoryLevel1Id},
+        categoryLevel2Id = #{categoryLevel2Id},categoryLevel3Id=#{categoryLevel3Id}, name = #{name},
+        fileName=#{fileName},price=#{price},stock=#{stock},description=#{description} where id=#{id}
+    </update>
+
+</mapper>

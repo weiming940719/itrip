@@ -1,0 +1,11 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+/*公用样式*/
+.w1200{ width:1200px; margin:0 auto;}
+.mt20{ margin-top:20px;}
+.f-l{ float:left;}
+.f-r{ float:right;}
+.none{ display:none;}
+

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bdqn.easybuy.dao.orderDetail.OrderDetailMapper">
+
+
+    <insert id="saveOrderDetail" parameterType="OrderDetail">
+        insert into easybuy_order_detail values(null,#{orderId},#{productId},#{quantity},#{cost})
+    </insert>
+
+    <resultMap id="OdMap" type="OrderDetail">
+        <id property="id" column="id"></id>
+        <association property="order" resultMap="orderMap"></association>
+        <association property="product" resultMap="productMap"></association>
+        <collection property="productList" resultMap="productMap"></collection>
+    </resultMap>
+    <resultMap id="orderMap" type="Order">
+        <id property="id" column="o_id"></id>
+    </resultMap>
+    <resultMap id="productMap" type="Product">
+        <id property="id" column="p_id"></id>
+    </resultMap>
+    <select id="queryAll" resultMap="OdMap">
+        SELECT od.*,o.id as o_id,o.loginName,o.serialNumber,o.userAddress,o.cost,o.createTime,
+        p.id as p_id,p.name,p.fileName,p.price
+        FROM easybuy_order_detail od,easybuy_product p,easybuy_order o
+        where od.orderId=o.id and od.productId=p.id
+        and o.serialNumber=#{serialNumber}
+    </select>
+
+    <select id="queryAllUserId" resultMap="OdMap" parameterType="integer">
+        SELECT od.*,o.id as o_id,o.loginName,o.serialNumber,o.userAddress,o.cost,o.createTime,
+        p.id as p_id,p.name,p.fileName,p.price
+        FROM easybuy_order_detail od,easybuy_product p,easybuy_order o
+        where od.orderId=o.id and od.productId=p.id
+        and o.userId=#{uId}
+    </select>
+
+    <select id="getAll" resultMap="OdMap" parameterType="integer">
+        select * from easybuy_order_detail od,easybuy_product p
+        where od.productId=p.id
+        and od.orderId IN
+        <foreach collection="list" item="oId" open="(" separator="," close=")">
+            #{oId}
+        </foreach>
+    </select>
+</mapper>
