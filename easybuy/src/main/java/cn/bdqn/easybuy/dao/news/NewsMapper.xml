@@ -5,7 +5,7 @@
 <mapper namespace="cn.bdqn.easybuy.dao.news.NewsMapper">
 
     <select id="queryAllNews" resultType="News">
-        SELECT * FROM `easybuy_news` ORDER BY id DESC LIMIT 0,5
+        SELECT * FROM `easybuy_news` ORDER BY createTime DESC LIMIT 0,5
     </select>
 
     <select id="queryNewsTitle" resultType="News" parameterType="integer">

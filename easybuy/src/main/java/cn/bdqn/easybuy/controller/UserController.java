@@ -31,7 +31,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "login", method = RequestMethod.GET)
+    @RequestMapping(value = "login", method = RequestMethod.POST)
     public String login(User user, HttpSession httpSession,String password, Model model) throws Exception {
         user.setPassword(MD5.getMD5(password));
         User loginUser = userService.login(user);
