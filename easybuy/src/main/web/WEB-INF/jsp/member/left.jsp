@@ -23,7 +23,6 @@
             <h3>个人中心</h3>
         </div>
         <ul>
-            <li class="per-li2"><a href="#">个人资料<span>></span></a></li>
             <li class="per-li3"><a
                     href="${pageContext.request.contextPath}/detail/queryAllUserIds">我的订单<span>></span></a></li>
             <c:if test="${loginUser!=null && sessionScope.loginUser.type==1}">
@@ -43,7 +42,7 @@
                     href="${pageContext.request.contextPath}/news/queryAll?pageNum=1&pageSize=12">新闻资讯<span>></span></a>
             </li>
             <li class="per-li10"><a
-                    href="${pageContext.request.contextPath}/address/queryAddress">会员积分<span>></span></a></li>
+                    href="${pageContext.request.contextPath}/address/queryAddress">收货地址<span>></span></a></li>
         </ul>
     </div>
 </div>
