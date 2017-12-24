@@ -42,7 +42,7 @@
     </select>
 
     <select id="queryProductListInIndex" resultType="Product">
-        select * from easybuy_product group by categorylevel3id having max(categorylevel3id)
+        select * from easybuy_product group by categorylevel3Id having max(categorylevel3Id)
     </select>
 
     <select id="queryProductDetail" resultType="Product">
