@@ -4,6 +4,7 @@ import cn.bdqn.easybuy.command.util.MD5;
 import cn.bdqn.easybuy.command.util.Message;
 import cn.bdqn.easybuy.entity.User;
 import cn.bdqn.easybuy.service.user.UserService;
+import cn.dsna.util.images.ValidateCode;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageInfo;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -43,7 +45,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "doregist", method = RequestMethod.POST)
-    public String doregist(User user, Model model, String password) {
+    public String doregist(User user, Model model, String password,String checkcode,HttpServletRequest request,
+                           HttpServletResponse response) {
 
 
         try {
@@ -52,12 +55,19 @@ public class UserController {
             e.printStackTrace();
         }
 
-        Integer rows = userService.regist(user);
-        if (rows > 0) {
-            model.addAttribute(rows);
-            model.addAttribute("message", "注册成功！");
-            return "user/login";
+        String code = (String) request.getSession().getAttribute("code");// 得到session中的正确验证码
+        if (checkcode.equalsIgnoreCase(code)) {
+            Integer rows = userService.regist(user);
+            if(rows>0){
+                model.addAttribute(rows);
+                model.addAttribute("message","注册成功！");
+                return "user/login";
+            } else {
+                model.addAttribute("message", "注册失败!");
+                return "user/regist";
+            }
         }
+        model.addAttribute("message", "验证码错误!");
         return "user/regist";
     }
 
@@ -153,4 +163,14 @@ public class UserController {
         return JSON.toJSONString(Message.error());
     }
 
+    @RequestMapping(value = "/code", method = RequestMethod.GET)
+    public void genarateCode(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        ValidateCode validateCode = new ValidateCode(180, 40, 4, 80);
+        String code = validateCode.getCode();//得到验证码的具体字符
+        System.out.println(code);
+        request.getSession().setAttribute("code", code);// 将验证码字符存到session中
+        response.setContentType("image/jpeg"); //设置响应类型为图片
+
+        validateCode.write(response.getOutputStream());// 将生成的验证码写到页面中
+    }
 }

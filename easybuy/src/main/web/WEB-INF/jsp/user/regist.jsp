@@ -28,6 +28,13 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/statics/common/js/lrscroll_1.js"></script>
 
     <script type="text/javascript">
+        $(function(){
+            $("#code").click(function(){
+                $(this).attr("src","${pageContext.request.contextPath}/user/code?time="+new Date());
+            });
+        })
+    </script>
+    <script type="text/javascript">
         $(function () {
             $("#registForm").submit(function () {
                 var uname = $("#uname").val();
@@ -40,6 +47,7 @@
                 var checkid = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
                 var checkemail = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
                 var checkmobil = /^1[3|4|5|7|8][0-9]{9}$/;
+                var checkcode = $("#checkcode").val();
                 if (uname == "") {
                     $("#userNameDiv").css("color", "red");
                     $("#userNameDiv").html("*用户名不能为空！");
@@ -95,6 +103,11 @@
                     $("#mobileDiv").css("color","red");
                     return false;
                 }
+                if(checkcode=="") {
+                    $("#checkcodeDiv").html("验证码不能为空！");
+                    $("#checkcodeDiv").css("color","red");
+                    return false;
+                }
             })
             $("#uname").focus(function () {
                 $("#uname").val("");
@@ -135,6 +148,11 @@
             $("#mob").focus(function () {
                 $("#mob").val("");
                 $("#mobileDiv").html("");
+                return false;
+            })
+            $("#checkcode").focus(function () {
+                $("#checkcode").val("");
+                $("#checkcodeDiv").html("");
                 return false;
             })
         })
@@ -236,16 +254,14 @@
                             <div id="mobileDiv"></div>
                         </td>
                     </tr>
-                    <%--<tr height="50">
+                    <tr height="50">
                         <td align="right"><font color="#ff4e00">*</font>&nbsp;验证码 &nbsp;</td>
                         <td>
-                          <input type="text"  class="l_ipt" id="vcode"/>
-                            <a href="javascript:change()">
-                                <img src="${pageContext.request.contextPath}/user/doCode" id="img" style="position: relative;bottom: -3px"/>
-                            </a>
-                            <a href="" style="font-size:12px; font-family:'宋体';" id="aCode">换一张</a>
+                            <input type="text"  class="l_ipt" name="checkcode" id="checkcode"/>
+                                <img id="code" src="${pageContext.request.contextPath}/user/code" style="position: relative;bottom: -3px"/>
+                            <div id="checkcodeDiv"></div>
                         </td>
-                    </tr>--%>
+                    </tr>
                     <tr>
                         <td>&nbsp;</td>
                     </tr>
