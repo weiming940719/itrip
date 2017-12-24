@@ -12,7 +12,7 @@
         SELECT * FROM easybuy_news where id=#{id}
     </select>
     <select id="queryAll" resultType="News">
-        SELECT * FROM easybuy_news
+        SELECT * FROM easybuy_news order by createTime DESC
     </select>
 
 </mapper>
